@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>صدای تو...</title>
+
+    <!-- بارگذاری فونت وزیرمتن برای پشتیبانی عالی از فارسی -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --cream: #fef8f0;
+        --warm-cream: #fdf0e0;
+        --gold: #c8963e;
+        --gold-light: #d4a855;
+        --gold-dark: #a0752a;
+        --brown-deep: #3d2b1f;
+        --brown-medium: #5c3d2e;
+        --brown-light: #8b6b4f;
+        --vinyl-dark: #1a1a1a;
+        --vinyl-groove: #2a2a2a;
+        --vinyl-shine: #3a3a3a;
+        --text-dark: #2c1f14;
+        --text-medium: #4a3728;
+        --shadow-soft: 0 4px 20px rgba(60, 30, 10, 0.15);
+        --shadow-record: 0 8px 40px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+        --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        --record-size: clamp(240px, 55vw, 340px);
+        --label-size: calc(var(--record-size) * 0.58);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Vazirmatn", "Tahoma", sans-serif;
+        background: linear-gradient(170deg, #fef8f0 0%, #fdf0e0 25%, #fef5ea 50%, #fdf2e4 75%, #fef8f0 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+        color: var(--text-dark);
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        -webkit-user-select: none;
+        cursor: default;
+      }
+
+      /* ─── اُوِرلی ویگنت برای حس نوستالژیک ─── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 50%,
+          rgba(60, 30, 10, 0.25) 85%,
+          rgba(40, 18, 5, 0.5) 100%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ─── بافت دانه‌دانهٔ نوستالژیک ─── */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        opacity: 0.035;
+        pointer-events: none;
+        z-index: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+      }
+
+      /* ─── ذرات شناور (غبار نورانی) ─── */
+      .particles-container {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(200, 150, 60, 0.7) 0%, rgba(200, 150, 60, 0) 70%);
+        animation: floatUp linear infinite;
+        opacity: 0;
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(0) translateX(0) scale(1);
+          opacity: 0;
+        }
+        5% {
+          opacity: 0.5;
+        }
+        40% {
+          opacity: 0.35;
+        }
+        85% {
+          opacity: 0.05;
+        }
+        100% {
+          transform: translateY(-105vh) translateX(40px) scale(0.3);
+          opacity: 0;
+        }
+      }
+
+      /* ─── کانتینر اصلی ─── */
+      .main-container {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 520px;
+        padding: 24px 20px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+        animation: fadeInUp 1s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ─── عنوان ظریف ─── */
+      .title-area {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .subtitle-decor {
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: var(--brown-light);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+
+      .title-main {
+        font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+        font-weight: 700;
+        color: var(--brown-deep);
+        letter-spacing: 0.02em;
+      }
+
+      .title-divider {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        border-radius: 1px;
+        opacity: 0.6;
+      }
+
+      /* ─── بخش گرامافون ─── */
+      .record-player-area {
+        position: relative;
+        width: var(--record-size);
+        height: var(--record-size);
+        flex-shrink: 0;
+        cursor: pointer;
+        transition: transform var(--transition-smooth);
+      }
+
+      .record-player-area:hover {
+        transform: scale(1.03);
+      }
+      .record-player-area:active {
+        transform: scale(0.97);
+        transition: transform 0.15s ease;
+      }
+
+      /* هالهٔ طلایی هنگام پخش */
+      .record-player-area.playing .glow-ring {
+        opacity: 0.7;
+        animation: glowPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes glowPulse {
+        0%,
+        100% {
+          box-shadow:
+            0 0 30px rgba(200, 150, 60, 0.3),
+            0 0 60px rgba(200, 150, 60, 0.15),
+            0 0 100px rgba(200, 140, 50, 0.08);
+        }
+        50% {
+          box-shadow:
+            0 0 45px rgba(200, 150, 60, 0.5),
+            0 0 80px rgba(200, 150, 60, 0.25),
+            0 0 130px rgba(200, 140, 50, 0.15);
+        }
+      }
+
+      .glow-ring {
+        position: absolute;
+        inset: -18px;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        box-shadow:
+          0 0 30px rgba(200, 150, 60, 0.3),
+          0 0 60px rgba(200, 150, 60, 0.1);
+      }
+
+      /* ─── صفحهٔ وینیل ─── */
+      .vinyl-record {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: conic-gradient(
+          from 0deg,
+          #1a1a1a 0deg,
+          #252525 2deg,
+          #1a1a1a 4deg,
+          #2d2d2d 6deg,
+          #1f1f1f 8deg,
+          #282828 10deg,
+          #1a1a1a 12deg,
+          #303030 14deg,
+          #1c1c1c 16deg,
+          #262626 18deg,
+          #1a1a1a 20deg,
+          #2b2b2b 22deg,
+          #1e1e1e 24deg,
+          #292929 26deg,
+          #1a1a1a 28deg,
+          #2f2f2f 30deg,
+          #1d1d1d 32deg,
+          #272727 34deg,
+          #1a1a1a 36deg,
+          #2c2c2c 38deg,
+          #1b1b1b 40deg,
+          #2a2a2a 42deg,
+          #1a1a1a 44deg,
+          #2e2e2e 46deg,
+          #1f1f1f 48deg,
+          #282828 50deg,
+          #1a1a1a 52deg,
+          #303030 54deg,
+          #1c1c1c 56deg,
+          #262626 58deg,
+          #1a1a1a 60deg,
+          #2b2b2b 62deg,
+          #1e1e1e 64deg,
+          #292929 66deg,
+          #1a1a1a 68deg,
+          #2f2f2f 70deg,
+          #1d1d1d 72deg,
+          #272727 74deg,
+          #1a1a1a 76deg,
+          #2c2c2c 78deg,
+          #1b1b1b 80deg,
+          #2a2a2a 82deg,
+          #1a1a1a 84deg,
+          #2e2e2e 86deg,
+          #1f1f1f 88deg,
+          #282828 90deg,
+          #1a1a1a 92deg,
+          #303030 94deg,
+          #1c1c1c 96deg,
+          #262626 98deg,
+          #1a1a1a 100deg,
+          #2b2b2b 102deg,
+          #1e1e1e 104deg,
+          #292929 106deg,
+          #1a1a1a 108deg,
+          #2f2f2f 110deg,
+          #1d1d1d 112deg,
+          #272727 114deg,
+          #1a1a1a 116deg,
+          #2c2c2c 118deg,
+          #1b1b1b 120deg,
+          #2a2a2a 122deg,
+          #1a1a1a 124deg,
+          #2e2e2e 126deg,
+          #1f1f1f 128deg,
+          #282828 130deg,
+          #1a1a1a 132deg,
+          #303030 134deg,
+          #1c1c1c 136deg,
+          #262626 138deg,
+          #1a1a1a 140deg,
+          #2b2b2b 142deg,
+          #1e1e1e 144deg,
+          #292929 146deg,
+          #1a1a1a 148deg,
+          #2f2f2f 150deg,
+          #1d1d1d 152deg,
+          #272727 154deg,
+          #1a1a1a 156deg,
+          #2c2c2c 158deg,
+          #1b1b1b 160deg,
+          #2a2a2a 162deg,
+          #1a1a1a 164deg,
+          #2e2e2e 166deg,
+          #1f1f1f 168deg,
+          #282828 170deg,
+          #1a1a1a 172deg,
+          #303030 174deg,
+          #1c1c1c 176deg,
+          #262626 178deg,
+          #1a1a1a 180deg,
+          #2b2b2b 182deg,
+          #1e1e1e 184deg,
+          #292929 186deg,
+          #1a1a1a 188deg,
+          #2f2f2f 190deg,
+          #1d1d1d 192deg,
+          #272727 194deg,
+          #1a1a1a 196deg,
+          #2c2c2c 198deg,
+          #1b1b1b 200deg,
+          #2a2a2a 202deg,
+          #1a1a1a 204deg,
+          #2e2e2e 206deg,
+          #1f1f1f 208deg,
+          #282828 210deg,
+          #1a1a1a 212deg,
+          #303030 214deg,
+          #1c1c1c 216deg,
+          #262626 218deg,
+          #1a1a1a 220deg,
+          #2b2b2b 222deg,
+          #1e1e1e 224deg,
+          #292929 226deg,
+          #1a1a1a 228deg,
+          #2f2f2f 230deg,
+          #1d1d1d 232deg,
+          #272727 234deg,
+          #1a1a1a 236deg,
+          #2c2c2c 238deg,
+          #1b1b1b 240deg,
+          #2a2a2a 242deg,
+          #1a1a1a 244deg,
+          #2e2e2e 246deg,
+          #1f1f1f 248deg,
+          #282828 250deg,
+          #1a1a1a 252deg,
+          #303030 254deg,
+          #1c1c1c 256deg,
+          #262626 258deg,
+          #1a1a1a 260deg,
+          #2b2b2b 262deg,
+          #1e1e1e 264deg,
+          #292929 266deg,
+          #1a1a1a 268deg,
+          #2f2f2f 270deg,
+          #1d1d1d 272deg,
+          #272727 274deg,
+          #1a1a1a 276deg,
+          #2c2c2c 278deg,
+          #1b1b1b 280deg,
+          #2a2a2a 282deg,
+          #1a1a1a 284deg,
+          #2e2e2e 286deg,
+          #1f1f1f 288deg,
+          #282828 290deg,
+          #1a1a1a 292deg,
+          #303030 294deg,
+          #1c1c1c 296deg,
+          #262626 298deg,
+          #1a1a1a 300deg,
+          #2b2b2b 302deg,
+          #1e1e1e 304deg,
+          #292929 306deg,
+          #1a1a1a 308deg,
+          #2f2f2f 310deg,
+          #1d1d1d 312deg,
+          #272727 314deg,
+          #1a1a1a 316deg,
+          #2c2c2c 318deg,
+          #1b1b1b 320deg,
+          #2a2a2a 322deg,
+          #1a1a1a 324deg,
+          #2e2e2e 326deg,
+          #1f1f1f 328deg,
+          #282828 330deg,
+          #1a1a1a 332deg,
+          #303030 334deg,
+          #1c1c1c 336deg,
+          #262626 338deg,
+          #1a1a1a 340deg,
+          #2b2b2b 342deg,
+          #1e1e1e 344deg,
+          #292929 346deg,
+          #1a1a1a 348deg,
+          #2f2f2f 350deg,
+          #1d1d1d 352deg,
+          #272727 354deg,
+          #1a1a1a 356deg,
+          #2c2c2c 358deg,
+          #1b1b1b 360deg
+        );
+        box-shadow: var(--shadow-record);
+        animation: spinRecord 4s linear infinite;
+        animation-play-state: paused;
+        transition: box-shadow 0.6s ease;
+      }
+
+      .record-player-area.playing .vinyl-record {
+        animation-play-state: running;
+        box-shadow:
+          var(--shadow-record),
+          0 0 60px rgba(180, 120, 40, 0.35);
+      }
+
+      @keyframes spinRecord {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* بازتاب نور روی صفحه */
+      .vinyl-record::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(
+          ellipse at 35% 30%,
+          rgba(255, 255, 255, 0.06) 0%,
+          rgba(255, 255, 255, 0.02) 25%,
+          transparent 55%
+        );
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      /* ─── برچسب مرکزی (عکس) ─── */
+      .record-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: var(--label-size);
+        height: var(--label-size);
+        border-radius: 50%;
+        overflow: hidden;
+        z-index: 2;
+        border: 4px solid #2a2a2a;
+        box-shadow:
+          inset 0 0 0 3px #1a1a1a,
+          0 2px 12px rgba(0, 0, 0, 0.5);
+        background: #1a1a1a;
+        transition: border-color 0.6s ease;
+      }
+
+      .record-player-area.playing .record-label {
+        border-color: #3a3a3a;
+      }
+
+      .record-label img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 50%;
+      }
+
+      /* دایرهٔ مرکزی کوچک (سوراخ صفحه) */
+      .record-center-hole {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0px;
+        height: 0px;
+        border-radius: 50%;
+        background: #fef8f0;
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      /* ─── آیکون پلی روی عکس ─── */
+      .play-icon-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 6;
+        pointer-events: none;
+        width: clamp(26px, 6vw, 40px);
+        height: clamp(26px, 6vw, 40px);
+        background: rgba(0, 0, 0, 0.55);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+      }
+
+      .play-icon-overlay svg {
+        width: 45%;
+        height: 45%;
+        fill: #fef8f0;
+        margin-right: -3px;
+        /* تصحیح مرکز مثلث */
+      }
+
+      .record-player-area.playing .play-icon-overlay {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+
+      /* ─── بازوی گرامافون (تون‌آرم) ─── */
+      .tonearm {
+        position: absolute;
+        z-index: 10;
+        pointer-events: none;
+        bottom: 8%;
+        right: -8%;
+        width: 35%;
+        height: 55%;
+        transform-origin: bottom right;
+        transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .record-player-area.playing .tonearm {
+        transform: rotate(45deg);
+      }
+
+      .tonearm-base {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 35%, #c0c0c0, #888 60%, #555 100%);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      }
+
+      .tonearm-arm {
+        position: absolute;
+        bottom: 6px;
+        right: 6px;
+        width: 85%;
+        height: 3px;
+        background: linear-gradient(180deg, #d0d0d0, #999 40%, #777 100%);
+        border-radius: 2px;
+        transform-origin: bottom right;
+        transform: rotate(-20deg);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      .tonearm-head {
+        position: absolute;
+        visibility: hidden;
+
+        top: 30%;
+        left: 8%;
+        width: 10px;
+        height: 18px;
+        background: linear-gradient(180deg, #bbb, #888 50%, #666 100%);
+        border-radius: 2px 2px 4px 4px;
+        transform: rotate(-15deg);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      }
+
+      /* ─── کنترل‌های پخش ─── */
+      .audio-controls {
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .time-display {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--brown-medium);
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        direction: ltr;
+        /* زمان همیشه LTR است */
+      }
+
+      .progress-bar-container {
+        width: 100%;
+        height: 6px;
+        background: rgba(140, 100, 60, 0.2);
+        border-radius: 3px;
+        cursor: pointer;
+        position: relative;
+        overflow: visible;
+        transition: height 0.2s ease;
+      }
+
+      .progress-bar-container:hover {
+        height: 8px;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold));
+        border-radius: 3px;
+        width: 0%;
+        position: relative;
+        transition: width 0.1s linear;
+        box-shadow: 0 0 10px rgba(200, 150, 60, 0.3);
+      }
+
+      .progress-bar-fill::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 2px 8px rgba(160, 100, 30, 0.5);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .progress-bar-container:hover .progress-bar-fill::after {
+        opacity: 1;
+      }
+
+      .volume-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        direction: ltr;
+      }
+
+      .volume-icon {
+        font-size: 1rem;
+        opacity: 0.5;
+        color: var(--brown-medium);
+        flex-shrink: 0;
+      }
+
+      .volume-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 80px;
+        height: 3px;
+        background: rgba(140, 100, 60, 0.25);
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--gold);
+        cursor: pointer;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        transition: transform 0.15s ease;
+      }
+      .volume-slider::-webkit-slider-thumb:active {
+        transform: scale(1.2);
+      }
+
+      /* ─── بخش متن ترانه ─── */
+      .lyrics-section {
+        width: 100%;
+        max-width: 420px;
+        background: rgba(255, 248, 240, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 20px;
+        padding: 28px 24px;
+        border: 1px solid rgba(180, 140, 100, 0.2);
+        box-shadow: 0 4px 24px rgba(60, 30, 10, 0.08);
+        max-height: 55vh;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        position: relative;
+      }
+
+      /* محو شدن لبه‌های بالا و پایین */
+      .lyrics-section::before,
+      .lyrics-section::after {
+        content: "";
+        position: sticky;
+        display: block;
+        height: 28px;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .lyrics-section::before {
+        top: 0;
+        background: linear-gradient(to bottom, rgba(254, 248, 240, 0.95), transparent);
+        border-radius: 20px 20px 0 0;
+        margin-top: -1px;
+      }
+      .lyrics-section::after {
+        bottom: 0;
+        background: linear-gradient(to top, rgba(254, 248, 240, 0.95), transparent);
+        border-radius: 0 0 20px 20px;
+        margin-bottom: -1px;
+      }
+
+      .lyrics-section::-webkit-scrollbar {
+        width: 4px;
+      }
+      .lyrics-section::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .lyrics-section::-webkit-scrollbar-thumb {
+        background: rgba(180, 140, 100, 0.3);
+        border-radius: 2px;
+      }
+
+      .verse {
+        text-align: center;
+        margin-bottom: 22px;
+        line-height: 2.2;
+        font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        font-weight: 400;
+        color: var(--text-medium);
+        transition:
+          color 0.3s ease,
+          transform 0.3s ease;
+        position: relative;
+        z-index: 1;
+      }
+
+      .verse:last-child {
+        margin-bottom: 0;
+      }
+
+      .verse .line {
+        display: block;
+        transition: all 0.4s ease;
+        position: relative;
+      }
+
+      /* خط فعلی (با هایلایت ملایم) */
+      .verse .line.highlighted {
+        color: var(--brown-deep);
+        font-weight: 600;
+        text-shadow: 0 0 20px rgba(200, 150, 60, 0.3);
+      }
+
+      .verse-divider {
+        text-align: center;
+        margin: 8px 0 20px;
+        font-size: 0.7rem;
+        opacity: 0.35;
+        letter-spacing: 0.3em;
+        color: var(--gold);
+      }
+
+      /* ─── فوتر ─── */
+      .footer-note {
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--brown-light);
+        opacity: 0.5;
+        font-weight: 300;
+        letter-spacing: 0.05em;
+      }
+
+      /* ─── ریسپانسیو ─── */
+      @media (max-width: 400px) {
+        .main-container {
+          padding: 16px 14px 32px;
+          gap: 20px;
+        }
+        .lyrics-section {
+          padding: 20px 16px;
+          border-radius: 16px;
+          max-height: 45vh;
+        }
+        .lyrics-section::before {
+          border-radius: 16px 16px 0 0;
+        }
+        .lyrics-section::after {
+          border-radius: 0 0 16px 16px;
+        }
+        .tonearm {
+          right: -6%;
+          width: 30%;
+          height: 48%;
+          transform: rotate(-26deg);
+        }
+        .record-player-area.playing .tonearm {
+          transform: rotate(-29deg);
+        }
+      }
+
+      @media (min-width: 768px) {
+        .main-container {
+          max-width: 600px;
+          gap: 32px;
+        }
+        .lyrics-section {
+          max-height: 50vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ─── ذرات شناور (با جاوااسکریپت تولید می‌شوند) ─── -->
+    <div class="particles-container" id="particlesContainer" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- ─── کانتینر اصلی ─── -->
+    <!-- ═══════════════════════════════════════════ -->
+    <main class="main-container">
+      <!-- ─── عنوان ─── -->
+      <div class="title-area">
+        <h1 class="title-main">صدای تو...</h1>
+        <div class="title-divider"></div>
+      </div>
+
+      <!-- ─── بخش گرامافون ─── -->
+      <!--
+        💡 راهنما:
+        برای تغییر عکس، فایل عکس خود را در کنار این فایل HTML قرار دهید
+        و مسیر آن را در تگ <img> داخل .record-label جایگزین کنید.
+        -->
+      <div class="record-player-area" id="recordPlayer" role="button" aria-label="پخش و توقف صدا">
+        <div class="glow-ring"></div>
+
+        <!-- صفحهٔ وینیل -->
+        <div class="vinyl-record" id="vinylRecord"></div>
+
+        <!-- برچسب مرکزی با عکس -->
+        <div class="record-label">
+          <!-- 🔁 عکس عزیزتان را اینجا قرار دهید (مسیر فایل را تغییر دهید) -->
+          <img
+            src="photo.jpg"
+            alt="عکس عزیز"
+            id="photoImg"
+            onerror="
+              this.style.display = 'none';
+              this.parentElement.style.background =
+                'radial-gradient(circle,#3d2b1f 0%,#1a1a1a 60%,#2a2a2a 100%)';
+              this.parentElement.innerHTML +=
+                '<span style=position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#c8963e;font-size:0.7rem;text-align:center;padding:10px;>عکس<br>عزیز</span>';
+            "
+          />
+        </div>
+
+        <!-- سوراخ مرکزی -->
+        <div class="record-center-hole"></div>
+
+        <!-- آیکون پلی -->
+        <div class="play-icon-overlay" id="playIconOverlay">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="6,3 20,12 6,21" />
+          </svg>
+        </div>
+
+        <!-- بازوی گرامافون -->
+        <div class="tonearm" aria-hidden="true">
+          <div class="tonearm-base"></div>
+          <div class="tonearm-arm"></div>
+          <div class="tonearm-head"></div>
+        </div>
+      </div>
+
+      <!-- ─── کنترل‌های پخش ─── -->
+      <div class="audio-controls">
+        <!-- نوار پیشرفت -->
+        <div class="progress-bar-container" id="progressBarContainer">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        <!-- نمایش زمان -->
+        <div class="time-display">
+          <span id="currentTimeDisplay">۰:۰۰</span>
+          <span id="durationDisplay">۰:۰۰</span>
+        </div>
+        <!-- ولوم -->
+        <div class="volume-row">
+          <span class="volume-icon">🔈</span>
+          <input
+            type="range"
+            class="volume-slider"
+            id="volumeSlider"
+            min="0"
+            max="1"
+            step="0.02"
+            value="0.75"
+            aria-label="میزان صدا"
+          />
+          <span class="volume-icon">🔊</span>
+        </div>
+      </div>
+
+      <p class="footer-note">به یاد خالۀ عزیزمان❤️</p>
+    </main>
+
+    <!-- ─── المان صوتی (مخفی) ─── -->
+    <!--
+    💡 راهنما:
+    فایل صوتی خود را در کنار این فایل HTML قرار دهید
+    و مسیر آن را در src زیر جایگزین کنید (مثلاً: src="صدای-عزیز.mp3")
+    -->
+    <audio id="audioElement" preload="auto">
+      <!-- 🔁 مسیر فایل صوتی را اینجا تغییر دهید -->
+      <source src="audio.m4a" type="audio/mpeg" />
+      مرورگر شما از پخش صدا پشتیبانی نمی‌کند.
+    </audio>
+
+    <script>
+      (function () {
+        // ─── المان‌های DOM ───
+        const audio = document.getElementById("audioElement");
+        const recordPlayer = document.getElementById("recordPlayer");
+        const playIconOverlay = document.getElementById("playIconOverlay");
+        const progressBarFill = document.getElementById("progressBarFill");
+        const progressBarContainer = document.getElementById("progressBarContainer");
+        const currentTimeDisplay = document.getElementById("currentTimeDisplay");
+        const durationDisplay = document.getElementById("durationDisplay");
+        const volumeSlider = document.getElementById("volumeSlider");
+        const lyricsSection = document.getElementById("lyricsSection");
+        const allLines = document.querySelectorAll(".verse .line");
+        const particlesContainer = document.getElementById("particlesContainer");
+
+        let isPlaying = false;
+        let lyricsLineIndex = -1;
+        let totalLines = allLines.length;
+
+        // ─── ذرات شناور ───
+        function createParticles() {
+          const count = 28;
+          const fragment = document.createDocumentFragment();
+          for (let i = 0; i < count; i++) {
+            const particle = document.createElement("div");
+            particle.classList.add("particle");
+            const size = Math.random() * 4 + 2; // 2px تا 6px
+            particle.style.width = size + "px";
+            particle.style.height = size + "px";
+            particle.style.left = Math.random() * 100 + "%";
+            particle.style.bottom = -(Math.random() * 40 + 5) + "%";
+            particle.style.animationDuration = Math.random() * 14 + 10 + "s"; // 10 تا 24 ثانیه
+            particle.style.animationDelay = Math.random() * 16 + "s"; // شروع پراکنده
+            fragment.appendChild(particle);
+          }
+          particlesContainer.appendChild(fragment);
+        }
+        createParticles();
+
+        // ─── فرمت زمان ───
+        function formatTime(seconds) {
+          if (isNaN(seconds) || seconds < 0) return "۰:۰۰";
+          const mins = Math.floor(seconds / 60);
+          const secs = Math.floor(seconds % 60);
+          // استفاده از ارقام فارسی
+          const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+          const toPersian = (num) =>
+            String(num)
+              .split("")
+              .map((d) => persianDigits[parseInt(d)])
+              .join("");
+          return toPersian(mins) + ":" + (secs < 10 ? "۰" : "") + toPersian(secs);
+        }
+
+        // ─── به‌روزرسانی نوار پیشرفت ───
+        function updateProgress() {
+          if (audio.duration && isFinite(audio.duration)) {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBarFill.style.width = progress + "%";
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+            durationDisplay.textContent = formatTime(audio.duration);
+
+            // به‌روزرسانی هایلایت متن ترانه بر اساس زمان
+            updateLyricsHighlight();
+          }
+        }
+
+        // ─── هایلایت متن ترانه ───
+        function updateLyricsHighlight() {
+          if (!audio.duration || !isFinite(audio.duration) || totalLines === 0) return;
+
+          const progress = audio.currentTime / audio.duration;
+          const targetLineIndex = Math.min(Math.floor(progress * totalLines), totalLines - 1);
+
+          if (targetLineIndex !== lyricsLineIndex) {
+            // حذف هایلایت قبلی
+            if (lyricsLineIndex >= 0 && lyricsLineIndex < totalLines) {
+              allLines[lyricsLineIndex].classList.remove("highlighted");
+            }
+            // افزودن هایلایت جدید
+            lyricsLineIndex = targetLineIndex;
+            if (lyricsLineIndex >= 0 && lyricsLineIndex < totalLines) {
+              allLines[lyricsLineIndex].classList.add("highlighted");
+              // اسکرول نرم به خط هایلایت شده
+              allLines[lyricsLineIndex].scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }
+          }
+        }
+
+        // ─── پخش / توقف ───
+        function togglePlayback() {
+          if (isPlaying) {
+            audio.pause();
+          } else {
+            // اگر audio قبلاً بارگذاری نشده، تلاش برای بارگذاری مجدد
+            if (audio.readyState === 0) {
+              audio.load();
+            }
+            audio.play().catch((err) => {
+              console.warn("پخش صدا با خطا مواجه شد:", err.message);
+              // می‌توانیم یک پیام ظریف به کاربر نشان دهیم
+              alert("برای پخش صدا، لطفاً فایل صوتی را در مسیر صحیح قرار دهید. 🙏");
+            });
+          }
+        }
+
+        function setPlayingState(state) {
+          isPlaying = state;
+          if (state) {
+            recordPlayer.classList.add("playing");
+          } else {
+            recordPlayer.classList.remove("playing");
+          }
+        }
+
+        // ─── رویدادهای Audio ───
+        audio.addEventListener("play", () => setPlayingState(true));
+        audio.addEventListener("pause", () => setPlayingState(false));
+        audio.addEventListener("ended", () => {
+          setPlayingState(false);
+          // بازنشانی هایلایت
+          if (lyricsLineIndex >= 0 && lyricsLineIndex < totalLines) {
+            allLines[lyricsLineIndex].classList.remove("highlighted");
+          }
+          lyricsLineIndex = -1;
+          progressBarFill.style.width = "0%";
+          currentTimeDisplay.textContent = formatTime(0);
+        });
+        audio.addEventListener("timeupdate", updateProgress);
+        audio.addEventListener("loadedmetadata", () => {
+          durationDisplay.textContent = formatTime(audio.duration);
+        });
+        audio.addEventListener("error", () => {
+          console.warn("فایل صوتی یافت نشد یا قابل پخش نیست. لطفاً مسیر فایل را بررسی کنید.");
+          durationDisplay.textContent = "--:--";
+        });
+
+        // ─── کلیک روی صفحه گرامافون ───
+        recordPlayer.addEventListener("click", (e) => {
+          e.preventDefault();
+          togglePlayback();
+        });
+
+        // ─── پشتیبانی از کیبورد ───
+        recordPlayer.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            togglePlayback();
+          }
+        });
+
+        // ─── کلیک روی نوار پیشرفت برای جستجو ───
+        progressBarContainer.addEventListener("click", (e) => {
+          if (!audio.duration || !isFinite(audio.duration)) return;
+          const rect = progressBarContainer.getBoundingClientRect();
+          // پشتیبانی از RTL: در حالت RTL، سمت راست = 0٪
+          const clickX = e.clientX - rect.left;
+          const fraction = clickX / rect.width;
+          // از آنجایی که صفحه RTL است، باید معکوس کنیم
+          const adjustedFraction = 1 - fraction;
+          const seekTime = Math.max(0, Math.min(adjustedFraction * audio.duration, audio.duration));
+          audio.currentTime = seekTime;
+          updateProgress();
+        });
+
+        // ─── کنترل ولوم ───
+        volumeSlider.addEventListener("input", () => {
+          audio.volume = parseFloat(volumeSlider.value);
+        });
+        // تنظیم ولوم اولیه
+        audio.volume = parseFloat(volumeSlider.value);
+
+        // ─── پشتیبانی از تاچ روی نوار پیشرفت ───
+        progressBarContainer.addEventListener(
+          "touchmove",
+          (e) => {
+            e.preventDefault();
+            if (!audio.duration || !isFinite(audio.duration)) return;
+            const rect = progressBarContainer.getBoundingClientRect();
+            const touchX = e.touches[0].clientX - rect.left;
+            const fraction = touchX / rect.width;
+            const adjustedFraction = 1 - fraction;
+            const seekTime = Math.max(0, Math.min(adjustedFraction * audio.duration, audio.duration));
+            audio.currentTime = seekTime;
+            updateProgress();
+          },
+          { passive: false },
+        );
+
+        // ─── تنظیم اولیه ───
+        setPlayingState(false);
+        currentTimeDisplay.textContent = formatTime(0);
+        durationDisplay.textContent = formatTime(0);
+
+        // تلاش برای دریافت duration در صورت بارگذاری سریع
+        if (audio.readyState >= 1 && audio.duration && isFinite(audio.duration)) {
+          durationDisplay.textContent = formatTime(audio.duration);
+        }
+
+        console.log("✨ صفحهٔ خاطره آماده است.");
+        console.log("📀 برای شروع، روی صفحهٔ گرامافون کلیک کنید.");
+        console.log("🖼️  عکس: photo.jpg  |  🎵 صدا: audio.mp3");
+        console.log("💡 در صورت نیاز، مسیر فایل‌ها را در کد HTML ویرایش کنید.");
+      })();
+    </script>
+  </body>
+</html>
